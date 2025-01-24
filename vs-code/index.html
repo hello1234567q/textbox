@@ -6,18 +6,18 @@
   <title>monaco-editor-lua</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.js"></script>
   <style>
-    /* Cấu hình giao diện cho Monaco Editor */
+    
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background-color: #181818; /* Màu nền tối */
-      color: white; /* Màu chữ mặc định là trắng */
+      background-color: #181818; 
+      color: white; 
       font-family: 'Courier New', monospace;
     }
     #editor {
-      width: 100vw;  /* Chiếm toàn bộ chiều rộng của màn hình */
-      height: 100vh; /* Chiếm toàn bộ chiều cao của màn hình */
+      width: 100vw;  
+      height: 100vh; 
     }
   </style>
 </head>
@@ -25,89 +25,89 @@
  
   <div id="editor"></div>
   <script>
-    // Load Monaco Editor
+    
     require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } });
     require(['vs/editor/editor.main'], function () {
-      // Đăng ký ngôn ngữ Lua
+      
       monaco.languages.register({ id: 'lua' });
 
-      // Cấu hình Monaco Editor
+      
       const editor = monaco.editor.create(document.getElementById('editor'), {
         value: 'local x = 10\nprint(x)\nif x > 5 then\n  print("Greater")\nend',
         language: 'lua',
-        theme: 'vs-dark',  // Chế độ màu tối
-        fontSize: 16,      // Cỡ chữ mặc định
-        automaticLayout: true, // Tự động điều chỉnh kích thước theo màn hình
-        lineNumbers: 'on', // Hiển thị số dòng
-        renderWhitespace: 'all', // Hiển thị không gian trắng
-        minimap: { enabled: true }, // Bật minimap
-        scrollBeyondLastLine: false, // Tắt cuộn qua dòng cuối
+        theme: 'vs-dark', 
+        fontSize: 16,      
+        automaticLayout: true, 
+        lineNumbers: 'on', 
+        renderWhitespace: 'all', 
+        minimap: { enabled: true }, 
+        scrollBeyondLastLine: false, 
         tokenColorCustomizations: {
           textMateRules: [
             {
               scope: [
-                'keyword.lua', // Từ khóa trong Lua
-                'keyword.control.lua', // Câu lệnh điều khiển (if, for, etc.)
+                'keyword.lua', 
+                'keyword.control.lua', 
               ],
               settings: {
-                foreground: '#FF9E00', // Màu cam cho từ khóa
-                fontStyle: 'bold', // Đậm cho từ khóa
+                foreground: '#FF9E00', 
+                fontStyle: 'bold', 
               }
             },
             {
               scope: [
-                'variable.language.lua', // Biến đặc biệt trong Lua
-                'variable.other.local.lua', // Biến địa phương
+                'variable.language.lua', 
+                'variable.other.local.lua', 
               ],
               settings: {
-                foreground: '#C5C8C6', // Màu xám cho biến
+                foreground: '#C5C8C6', 
               }
             },
             {
               scope: [
-                'string.quoted.double.lua', // Xâu ký tự trong dấu nháy kép
-                'string.quoted.single.lua', // Xâu ký tự trong dấu nháy đơn
+                'string.quoted.double.lua', 
+                'string.quoted.single.lua', 
               ],
               settings: {
-                foreground: '#A6E22E', // Màu xanh lá cho xâu ký tự
+                foreground: '#A6E22E', 
               }
             },
             {
               scope: [
-                'comment.block.lua', // Bình luận trong Lua
+                'comment.block.lua', 
                 'comment.line.lua',
               ],
               settings: {
-                foreground: '#75715E', // Màu xám nhạt cho bình luận
-                fontStyle: 'italic', // Màu xám nhạt và nghiêng cho bình luận
+                foreground: '#75715E', 
+                fontStyle: 'italic', 
               }
             },
             {
               scope: [
-                'constant.numeric.lua', // Số liệu
+                'constant.numeric.lua', 
               ],
               settings: {
-                foreground: '#F92672', // Màu đỏ cho số
+                foreground: '#F92672', 
               }
             },
           ]
         }
       });
 
-      // Thay đổi cỡ chữ theo tỷ lệ màn hình
+     
       function adjustFontSize() {
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
         
-        // Tính toán cỡ chữ dựa trên kích thước màn hình
+        
         const fontSize = Math.max(12, Math.min(screenWidth, screenHeight) / 40);
         editor.updateOptions({ fontSize: fontSize });
       }
 
-      // Gọi hàm điều chỉnh cỡ chữ mỗi khi kích thước màn hình thay đổi
+      
       window.addEventListener('resize', adjustFontSize);
       
-      // Gọi hàm điều chỉnh cỡ chữ ngay khi khởi tạo
+     
       adjustFontSize();
     });
   </script>
