@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>monaco-editor-lua</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.js"></script>
+  <style>
+    /* Cấu hình giao diện cho Monaco Editor */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #181818; /* Màu nền tối */
+      color: white; /* Màu chữ mặc định là trắng */
+      font-family: 'Courier New', monospace;
+    }
+    #editor {
+      width: 100vw;  /* Chiếm toàn bộ chiều rộng của màn hình */
+      height: 100vh; /* Chiếm toàn bộ chiều cao của màn hình */
+    }
+  </style>
+</head>
+<body>
+ 
+  <div id="editor"></div>
+  <script>
+    // Load Monaco Editor
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } });
+    require(['vs/editor/editor.main'], function () {
+      // Đăng ký ngôn ngữ Lua
+      monaco.languages.register({ id: 'lua' });
+
+      // Cấu hình Monaco Editor
+      const editor = monaco.editor.create(document.getElementById('editor'), {
+        value: 'local x = 10\nprint(x)\nif x > 5 then\n  print("Greater")\nend',
+        language: 'lua',
+        theme: 'vs-dark',  // Chế độ màu tối
+        fontSize: 16,      // Cỡ chữ mặc định
+        automaticLayout: true, // Tự động điều chỉnh kích thước theo màn hình
+        lineNumbers: 'on', // Hiển thị số dòng
+        renderWhitespace: 'all', // Hiển thị không gian trắng
+        minimap: { enabled: true }, // Bật minimap
+        scrollBeyondLastLine: false, // Tắt cuộn qua dòng cuối
+        tokenColorCustomizations: {
+          textMateRules: [
+            {
+              scope: [
+                'keyword.lua', // Từ khóa trong Lua
+                'keyword.control.lua', // Câu lệnh điều khiển (if, for, etc.)
+              ],
+              settings: {
+                foreground: '#FF9E00', // Màu cam cho từ khóa
+                fontStyle: 'bold', // Đậm cho từ khóa
+              }
+            },
+            {
+              scope: [
+                'variable.language.lua', // Biến đặc biệt trong Lua
+                'variable.other.local.lua', // Biến địa phương
+              ],
+              settings: {
+                foreground: '#C5C8C6', // Màu xám cho biến
+              }
+            },
+            {
+              scope: [
+                'string.quoted.double.lua', // Xâu ký tự trong dấu nháy kép
+                'string.quoted.single.lua', // Xâu ký tự trong dấu nháy đơn
+              ],
+              settings: {
+                foreground: '#A6E22E', // Màu xanh lá cho xâu ký tự
+              }
+            },
+            {
+              scope: [
+                'comment.block.lua', // Bình luận trong Lua
+                'comment.line.lua',
+              ],
+              settings: {
+                foreground: '#75715E', // Màu xám nhạt cho bình luận
+                fontStyle: 'italic', // Màu xám nhạt và nghiêng cho bình luận
+              }
+            },
+            {
+              scope: [
+                'constant.numeric.lua', // Số liệu
+              ],
+              settings: {
+                foreground: '#F92672', // Màu đỏ cho số
+              }
+            },
+          ]
+        }
+      });
+
+      // Thay đổi cỡ chữ theo tỷ lệ màn hình
+      function adjustFontSize() {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        
+        // Tính toán cỡ chữ dựa trên kích thước màn hình
+        const fontSize = Math.max(12, Math.min(screenWidth, screenHeight) / 40);
+        editor.updateOptions({ fontSize: fontSize });
+      }
+
+      // Gọi hàm điều chỉnh cỡ chữ mỗi khi kích thước màn hình thay đổi
+      window.addEventListener('resize', adjustFontSize);
+      
+      // Gọi hàm điều chỉnh cỡ chữ ngay khi khởi tạo
+      adjustFontSize();
+    });
+  </script>
+</body>
+</html>
