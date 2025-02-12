@@ -1,26 +1,39 @@
-name: unzip
+name: Auto Unzip and Push
 
 on:
   push:
     paths:
-      - "*.zip" 
+      - "**.zip"  # Chỉ chạy khi có file .zip được push lên repo
+  workflow_dispatch:  # Cho phép chạy thủ công từ GitHub Actions
 
 jobs:
-  unzip:
+  unzip_and_push:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3  
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Unzip
-        run: |
-          unzip -o *.zip  
-          rm -f *.zip  
+    - name: Find and Unzip .zip files
+      run: |
+        for file in *.zip; do
+          if [ -f "$file" ]; then
+            unzip -o "$file" -d "${file%.zip}"
+            rm "$file"  # Xóa file zip sau khi giải nén
+            echo "Unzipped and removed: $file"
+          fi
+        done
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Auto-unzipped and removed .zip file"
-          git push
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+
+    - name: Commit and Push Changes
+      run: |
+        git add .
+        git commit -m "Auto-unzipped and removed .zip file" || echo "No changes to commit"
+        git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
+        git push origin main
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
